@@ -1,5 +1,5 @@
 //
-//  Anchor+Center.swift
+//  Anchor+XY.swift
 //  Constraint
 //
 //  Created by 林達也 on 2018/04/07.

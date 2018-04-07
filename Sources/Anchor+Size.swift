@@ -17,10 +17,10 @@ extension CGSize {
 //
 // MARK: -
 public struct SizeAnchor {
-    private let wAnchor: DimensionAnchor
-    private let hAnchor: DimensionAnchor
+    private let wAnchor: DAnchor
+    private let hAnchor: DAnchor
 
-    init(width: DimensionAnchor, height: DimensionAnchor) {
+    init(width: DAnchor, height: DAnchor) {
         (wAnchor, hAnchor) = (width, height)
     }
 

@@ -1,8 +1,8 @@
 //
-//  Anchor+X.swift
+//  Anchor+D.swift
 //  Constraint
 //
-//  Created by 林達也 on 2018/04/07.
+//  Created by 林達也 on 2018/04/05.
 //  Copyright © 2018年 林達也. All rights reserved.
 //
 
@@ -10,90 +10,91 @@ import Foundation
 
 //
 // MARK: -
-public struct XAnchor {
-    private let anchor: NSLayoutXAxisAnchor
+public struct DAnchor {
+    private let anchor: NSLayoutDimension
     private let installer: ConstraintInstaller
 
-    init(_ anchor: NSLayoutXAxisAnchor, into installer: ConstraintInstaller) {
+    init(_ anchor: NSLayoutDimension, into installer: ConstraintInstaller) {
         self.anchor = anchor
         self.installer = installer
     }
-
-    public func anchorWithOffset(_ rhs: XAnchor) -> DAnchor {
-        return .init(anchor.anchorWithOffset(to: rhs.anchor), into: installer)
-    }
 }
 
-extension XAnchor {
+extension DAnchor {
     @discardableResult
     public func equalTo(
-        _ rhs: XAnchor,
+        _ rhs: DAnchor,
+        multiplier: CGFloat = 1,
         constant: CGFloat = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
+        precondition(multiplier != 0)
         return installer.install(
-            anchor.constraint(equalTo: rhs.anchor, constant: constant),
+            anchor.constraint(equalTo: rhs.anchor, multiplier: multiplier, constant: constant),
             priority: priority, file, line)
     }
 
     @discardableResult
     public func greaterThanOrEqualTo(
-        _ rhs: XAnchor,
+        _ rhs: DAnchor,
+        multiplier: CGFloat = 1,
         constant: CGFloat = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
+        precondition(multiplier != 0)
         return installer.install(
-            anchor.constraint(greaterThanOrEqualTo: rhs.anchor, constant: constant),
+            anchor.constraint(greaterThanOrEqualTo: rhs.anchor, multiplier: multiplier, constant: constant),
             priority: priority, file, line)
     }
 
     @discardableResult
     public func lessThanOrEqualTo(
-        _ rhs: XAnchor,
+        _ rhs: DAnchor,
+        multiplier: CGFloat = 1,
         constant: CGFloat = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
+        precondition(multiplier != 0)
         return installer.install(
-            anchor.constraint(lessThanOrEqualTo: rhs.anchor, constant: constant),
+            anchor.constraint(lessThanOrEqualTo: rhs.anchor, multiplier: multiplier, constant: constant),
             priority: priority, file, line)
     }
+}
 
+extension DAnchor {
     @discardableResult
-    public func equalToSystemSpacingAfter(
-        _ rhs: XAnchor,
-        multiplier: CGFloat = 1,
+    public func equalTo(
+        _ constant: CGFloat,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         return installer.install(
-            anchor.constraintEqualToSystemSpacingAfter(rhs.anchor, multiplier: multiplier),
+            anchor.constraint(equalToConstant: constant),
             priority: priority, file, line)
     }
 
     @discardableResult
-    public func greaterThanOrEqualToSystemSpacingAfter(
-        _ rhs: XAnchor,
-        multiplier: CGFloat = 1,
+    public func greaterThanOrEqualTo(
+        _ constant: CGFloat,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         return installer.install(
-            anchor.constraintGreaterThanOrEqualToSystemSpacingAfter(rhs.anchor, multiplier: multiplier),
+            anchor.constraint(greaterThanOrEqualToConstant: constant),
             priority: priority, file, line)
     }
 
     @discardableResult
-    public func lessThanOrEqualToSystemSpacingAfter(
-        _ rhs: XAnchor,
-        multiplier: CGFloat = 1,
+    public func lessThanOrEqualTo(
+        _ constant: CGFloat,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         return installer.install(
-            anchor.constraintLessThanOrEqualToSystemSpacingAfter(rhs.anchor, multiplier: multiplier),
+            anchor.constraint(lessThanOrEqualToConstant: constant),
             priority: priority, file, line)
     }
 }

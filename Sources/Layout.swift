@@ -88,11 +88,11 @@ public extension Layout where Base: UIView {
         return .init(base.trailingAnchor, into: installer)
     }
 
-    var width: DimensionAnchor {
+    var width: DAnchor {
         return .init(base.widthAnchor, into: installer)
     }
 
-    var height: DimensionAnchor {
+    var height: DAnchor {
         return .init(base.heightAnchor, into: installer)
     }
 
@@ -144,11 +144,11 @@ extension Layout where Base: UILayoutGuide {
         return .init(base.trailingAnchor, into: installer)
     }
 
-    var width: DimensionAnchor {
+    var width: DAnchor {
         return .init(base.widthAnchor, into: installer)
     }
 
-    var height: DimensionAnchor {
+    var height: DAnchor {
         return .init(base.heightAnchor, into: installer)
     }
 
