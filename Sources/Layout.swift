@@ -164,3 +164,19 @@ extension Layout where Base: UILayoutGuide {
         return .init(top: top, leading: leading, bottom: bottom, trailing: trailing)
     }
 }
+
+//
+// MARK: - UILayoutSupport
+extension Layout where Base == UILayoutSupport {
+    var top: YAnchor {
+        return .init(base.topAnchor, into: installer)
+    }
+
+    var bottom: YAnchor {
+        return .init(base.bottomAnchor, into: installer)
+    }
+
+    var height: DAnchor {
+        return .init(base.heightAnchor, into: installer)
+    }
+}
