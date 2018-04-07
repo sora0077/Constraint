@@ -8,10 +8,29 @@
 
 import Foundation
 
-extension CGSize {
-    init(_ value: CGFloat) {
-        self.init(width: value, height: value)
-    }
+public protocol Size {
+    var _constraint_width: CGFloat { get }
+    var _constraint_height: CGFloat { get }
+}
+
+extension CGSize: Size {
+    public var _constraint_width: CGFloat { return width }
+    public var _constraint_height: CGFloat { return height }
+}
+
+extension CGFloat: Size {
+    public var _constraint_width: CGFloat { return self }
+    public var _constraint_height: CGFloat { return self }
+}
+
+extension Double: Size {
+    public var _constraint_width: CGFloat { return CGFloat(self) }
+    public var _constraint_height: CGFloat { return CGFloat(self) }
+}
+
+extension Int: Size {
+    public var _constraint_width: CGFloat { return CGFloat(self) }
+    public var _constraint_height: CGFloat { return CGFloat(self) }
 }
 
 //
@@ -23,7 +42,6 @@ public struct SizeAnchor {
     init(width: DAnchor, height: DAnchor) {
         (wAnchor, hAnchor) = (width, height)
     }
-
 }
 
 // MARK: equalTo
@@ -31,49 +49,94 @@ extension SizeAnchor {
     @discardableResult
     public func equalTo(
         _ rhs: SizeAnchor,
-        multiplier: CGSize = .init(width: 1, height: 1),
-        constant: CGSize = .zero,
+        multiplier: Size = CGSize(width: 1, height: 1),
+        constant: Size = CGSize.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
-    ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
+        ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
         return (
-            wAnchor.equalTo(rhs.wAnchor, multiplier: multiplier.width, constant: constant.width,
+            wAnchor.equalTo(rhs.wAnchor,
+                            multiplier: multiplier._constraint_width, constant: constant._constraint_width,
                             priority: priority, file, line),
-            hAnchor.equalTo(rhs.hAnchor, multiplier: multiplier.height, constant: constant.height,
+            hAnchor.equalTo(rhs.hAnchor,
+                            multiplier: multiplier._constraint_height, constant: constant._constraint_height,
                             priority: priority, file, line)
         )
     }
 
     @discardableResult
-    public func equalTo(
+    public func greaterThanOrEqualTo(
         _ rhs: SizeAnchor,
-        multiplier: CGFloat = 1,
-        constant: CGFloat,
+        multiplier: Size = CGSize(width: 1, height: 1),
+        constant: Size = CGSize.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
-    ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
-        return equalTo(rhs, multiplier: CGSize(multiplier), constant: CGSize(constant), priority: priority, file, line)
-    }
-
-    // MARK: 
-    @discardableResult
-    public func equalTo(
-        _ constant: CGSize,
-        priority: UILayoutPriority = .required,
-        _ file: StaticString = #file, _ line: UInt = #line
-    ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
+        ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
         return (
-            wAnchor.equalTo(constant.width, priority: priority, file, line),
-            hAnchor.equalTo(constant.height, priority: priority, file, line)
+            wAnchor.greaterThanOrEqualTo(rhs.wAnchor,
+                                         multiplier: multiplier._constraint_width, constant: constant._constraint_width,
+                                         priority: priority, file, line),
+            hAnchor.greaterThanOrEqualTo(rhs.hAnchor,
+                                         multiplier: multiplier._constraint_height, constant: constant._constraint_height,
+                                         priority: priority, file, line)
         )
     }
 
     @discardableResult
-    public func equalTo(
-        _ constant: CGFloat,
+    public func lessThanOrEqualTo(
+        _ rhs: SizeAnchor,
+        multiplier: Size = CGSize(width: 1, height: 1),
+        constant: Size = CGSize.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
-    ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
-        return equalTo(.init(width: constant, height: constant), priority: priority, file, line)
+        ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
+        return (
+            wAnchor.lessThanOrEqualTo(rhs.wAnchor,
+                                      multiplier: multiplier._constraint_width, constant: constant._constraint_width,
+                                      priority: priority, file, line),
+            hAnchor.lessThanOrEqualTo(rhs.hAnchor,
+                                      multiplier: multiplier._constraint_height, constant: constant._constraint_height,
+                                      priority: priority, file, line)
+        )
+    }
+}
+
+//
+// MARK: - constant
+extension SizeAnchor {
+    @discardableResult
+    public func equalTo(
+        _ constant: Size,
+        priority: UILayoutPriority = .required,
+        _ file: StaticString = #file, _ line: UInt = #line
+        ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
+        return (
+            wAnchor.equalTo(constant._constraint_width, priority: priority, file, line),
+            hAnchor.equalTo(constant._constraint_height, priority: priority, file, line)
+        )
+    }
+
+    @discardableResult
+    public func greaterThanOrEqualTo(
+        _ constant: Size,
+        priority: UILayoutPriority = .required,
+        _ file: StaticString = #file, _ line: UInt = #line
+        ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
+        return (
+            wAnchor.greaterThanOrEqualTo(constant._constraint_width, priority: priority, file, line),
+            hAnchor.greaterThanOrEqualTo(constant._constraint_height, priority: priority, file, line)
+        )
+    }
+
+    @discardableResult
+    public func lessThanOrEqualTo(
+        _ constant: Size,
+        priority: UILayoutPriority = .required,
+        _ file: StaticString = #file, _ line: UInt = #line
+        ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
+        return (
+            wAnchor.lessThanOrEqualTo(constant._constraint_width, priority: priority, file, line),
+            hAnchor.lessThanOrEqualTo(constant._constraint_height, priority: priority, file, line)
+        )
     }
 }

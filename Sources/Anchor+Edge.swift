@@ -8,18 +8,46 @@
 
 import Foundation
 
-extension UIEdgeInsets {
-    init(_ value: UIOffset) {
-        self.init(top: value.vertical, left: value.horizontal,
-                  bottom: value.vertical, right: value.horizontal)
-    }
-    init(_ value: CGFloat) {
-        self.init(top: value, left: value, bottom: value, right: value)
-    }
+public protocol EdgeInsets {
+    var _constraint_top: CGFloat { get }
+    var _constraint_left: CGFloat { get }
+    var _constraint_bottom: CGFloat { get }
+    var _constraint_right: CGFloat { get }
 }
 
-prefix func - (lhs: UIOffset) -> UIOffset {
-    return UIOffset(horizontal: -lhs.horizontal, vertical: -lhs.vertical)
+extension UIEdgeInsets: EdgeInsets {
+    public var _constraint_top: CGFloat { return top }
+    public var _constraint_left: CGFloat { return left }
+    public var _constraint_bottom: CGFloat { return bottom }
+    public var _constraint_right: CGFloat { return right }
+}
+
+extension UIOffset: EdgeInsets {
+    public var _constraint_top: CGFloat { return vertical }
+    public var _constraint_left: CGFloat { return horizontal }
+    public var _constraint_bottom: CGFloat { return vertical }
+    public var _constraint_right: CGFloat { return horizontal }
+}
+
+extension CGFloat: EdgeInsets {
+    public var _constraint_top: CGFloat { return self }
+    public var _constraint_left: CGFloat { return self }
+    public var _constraint_bottom: CGFloat { return self }
+    public var _constraint_right: CGFloat { return self }
+}
+
+extension Double: EdgeInsets {
+    public var _constraint_top: CGFloat { return CGFloat(self) }
+    public var _constraint_left: CGFloat { return CGFloat(self) }
+    public var _constraint_bottom: CGFloat { return CGFloat(self) }
+    public var _constraint_right: CGFloat { return CGFloat(self) }
+}
+
+extension Int: EdgeInsets {
+    public var _constraint_top: CGFloat { return CGFloat(self) }
+    public var _constraint_left: CGFloat { return CGFloat(self) }
+    public var _constraint_bottom: CGFloat { return CGFloat(self) }
+    public var _constraint_right: CGFloat { return CGFloat(self) }
 }
 
 //
@@ -33,7 +61,6 @@ public struct EdgeAnchor {
     init(top: YAnchor, leading: XAnchor, bottom: YAnchor, trailing: XAnchor) {
         (topAnchor, leadingAnchor, bottomAnchor, tralingAnchor) = (top, leading, bottom, trailing)
     }
-
 }
 
 // MARK: equalTo
@@ -41,35 +68,45 @@ extension EdgeAnchor {
     @discardableResult
     public func equalTo(
         _ rhs: EdgeAnchor,
-        _ insets: UIEdgeInsets = .zero,
+        inset: EdgeInsets = UIEdgeInsets.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
-    ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
+        ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
         return (
-            topAnchor.equalTo(rhs.topAnchor, constant: insets.top, priority: priority, file, line),
-            leadingAnchor.equalTo(rhs.leadingAnchor, constant: insets.left, priority: priority, file, line),
-            bottomAnchor.equalTo(rhs.bottomAnchor, constant: -insets.bottom, priority: priority, file, line),
-            tralingAnchor.equalTo(rhs.tralingAnchor, constant: -insets.right, priority: priority, file, line)
+            topAnchor.equalTo(rhs.topAnchor, constant: inset._constraint_top, priority: priority, file, line),
+            leadingAnchor.equalTo(rhs.leadingAnchor, constant: inset._constraint_left, priority: priority, file, line),
+            bottomAnchor.equalTo(rhs.bottomAnchor, constant: -inset._constraint_bottom, priority: priority, file, line),
+            tralingAnchor.equalTo(rhs.tralingAnchor, constant: -inset._constraint_right, priority: priority, file, line)
         )
     }
 
     @discardableResult
-    public func equalTo(
+    public func greaterThanOrEqualTo(
         _ rhs: EdgeAnchor,
-        offset: UIOffset,
+        inset: EdgeInsets = UIEdgeInsets.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
-    ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
-        return equalTo(rhs, .init(-offset), priority: priority, file, line)
+        ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
+        return (
+            topAnchor.lessThanOrEqualTo(rhs.topAnchor, constant: inset._constraint_top, priority: priority, file, line),
+            leadingAnchor.lessThanOrEqualTo(rhs.leadingAnchor, constant: inset._constraint_left, priority: priority, file, line),
+            bottomAnchor.greaterThanOrEqualTo(rhs.bottomAnchor, constant: -inset._constraint_bottom, priority: priority, file, line),
+            tralingAnchor.greaterThanOrEqualTo(rhs.tralingAnchor, constant: -inset._constraint_right, priority: priority, file, line)
+        )
     }
 
     @discardableResult
-    public func equalTo(
+    public func lessThanOrEqualTo(
         _ rhs: EdgeAnchor,
-        offset: CGFloat,
+        inset: EdgeInsets = UIEdgeInsets.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
-    ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
-        return equalTo(rhs, .init(-offset), priority: priority, file, line)
+        ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
+        return (
+            topAnchor.greaterThanOrEqualTo(rhs.topAnchor, constant: inset._constraint_top, priority: priority, file, line),
+            leadingAnchor.greaterThanOrEqualTo(rhs.leadingAnchor, constant: inset._constraint_left, priority: priority, file, line),
+            bottomAnchor.lessThanOrEqualTo(rhs.bottomAnchor, constant: -inset._constraint_bottom, priority: priority, file, line),
+            tralingAnchor.lessThanOrEqualTo(rhs.tralingAnchor, constant: -inset._constraint_right, priority: priority, file, line)
+        )
     }
 }

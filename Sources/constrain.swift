@@ -22,5 +22,7 @@ func test() {
 
     constrain(a, b) { a, b in
         a.centerX.equalTo(b.centerX)
+        a.size.equalTo(b.size)
+        a.center.equalTo(b.center)
     }
 }
