@@ -19,6 +19,7 @@ public struct XAnchor {
         self.installer = installer
     }
 
+    @available(iOS 10.0, *)
     public func anchorWithOffset(_ rhs: XAnchor) -> DAnchor {
         return .init(anchor.anchorWithOffset(to: rhs.anchor), into: installer)
     }
@@ -61,6 +62,7 @@ extension XAnchor {
             priority: priority, file, line)
     }
 
+    @available(iOS 11.0, *)
     @discardableResult
     public func equalToSystemSpacingAfter(
         _ rhs: XAnchor,
@@ -73,6 +75,7 @@ extension XAnchor {
             priority: priority, file, line)
     }
 
+    @available(iOS 11.0, *)
     @discardableResult
     public func greaterThanOrEqualToSystemSpacingAfter(
         _ rhs: XAnchor,
@@ -85,6 +88,7 @@ extension XAnchor {
             priority: priority, file, line)
     }
 
+    @available(iOS 11.0, *)
     @discardableResult
     public func lessThanOrEqualToSystemSpacingAfter(
         _ rhs: XAnchor,

@@ -10,6 +10,11 @@ import Foundation
 import class UIKit.UIView
 
 public struct Layout<Base> {
+    public enum Direction {
+        case natural
+        case leftToRight
+    }
+
     fileprivate let base: Base
     fileprivate let installer: ConstraintInstaller
 
@@ -107,11 +112,20 @@ public extension Layout where Base: UIView {
     var edge: EdgeAnchor {
         return .init(top: top, left: leading, bottom: bottom, right: trailing)
     }
+
+    func edge(_ direction: Direction) -> EdgeAnchor {
+        switch direction {
+        case .natural:
+            return .init(top: top, left: leading, bottom: bottom, right: trailing)
+        case .leftToRight:
+            return .init(top: top, left: left, bottom: bottom, right: right)
+        }
+    }
 }
 
 //
 // MARK: - UILayoutGuide
-extension Layout where Base: UILayoutGuide {
+public extension Layout where Base: UILayoutGuide {
     var centerX: XAnchor {
         return .init(base.centerXAnchor, into: installer)
     }
@@ -163,11 +177,20 @@ extension Layout where Base: UILayoutGuide {
     var edge: EdgeAnchor {
         return .init(top: top, left: leading, bottom: bottom, right: trailing)
     }
+
+    func edge(_ direction: Direction) -> EdgeAnchor {
+        switch direction {
+        case .natural:
+            return .init(top: top, left: leading, bottom: bottom, right: trailing)
+        case .leftToRight:
+            return .init(top: top, left: left, bottom: bottom, right: right)
+        }
+    }
 }
 
 //
 // MARK: - UILayoutSupport
-extension Layout where Base == UILayoutSupport {
+public extension Layout where Base == UILayoutSupport {
     var top: YAnchor {
         return .init(base.topAnchor, into: installer)
     }
