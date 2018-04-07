@@ -8,17 +8,32 @@
 
 import Foundation
 
-public func constrain<A1>(_ a1: A1, _ closure: (Layout<A1>) -> Void) {
-    let installer = ConstraintInstaller()
-    let c1 = Layout(a1, installer: installer).root()
+@discardableResult
+public func constrain<A1>(_ a1: A1, _ closure: (Layout<A1>) -> Void) -> ConstraintGroup {
+    let group = ConstraintGroup()
+    let c1 = Layout(a1, group: group).root()
     closure(c1)
-    installer.activate()
+    group.activate()
+    return group
 }
 
-public func constrain<A1, A2>(_ a1: A1, _ a2: A2, _ closure: (Layout<A1>, Layout<A2>) -> Void) {
-    let installer = ConstraintInstaller()
-    let c1 = Layout(a1, installer: installer).root()
-    let c2 = Layout(a2, installer: installer).root()
+@discardableResult
+public func constrain<A1, A2>(_ a1: A1, _ a2: A2, _ closure: (Layout<A1>, Layout<A2>) -> Void) -> ConstraintGroup {
+    let group = ConstraintGroup()
+    let c1 = Layout(a1, group: group).root()
+    let c2 = Layout(a2, group: group).root()
     closure(c1, c2)
-    installer.activate()
+    group.activate()
+    return group
+}
+
+@discardableResult
+public func constrain<A1, A2, A3>(_ a1: A1, _ a2: A2, _ a3: A3, _ closure: (Layout<A1>, Layout<A2>, Layout<A3>) -> Void) -> ConstraintGroup {
+    let group = ConstraintGroup()
+    let c1 = Layout(a1, group: group).root()
+    let c2 = Layout(a2, group: group).root()
+    let c3 = Layout(a3, group: group).root()
+    closure(c1, c2, c3)
+    group.activate()
+    return group
 }

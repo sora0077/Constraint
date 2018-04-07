@@ -16,12 +16,12 @@ public final class Layout<Base> {
     }
 
     private let base: Base
-    private let installer: ConstraintInstaller
+    private let installer: ConstraintGroup
     private var cache: [String: Any] = [:]
 
-    init(_ base: Base, installer: ConstraintInstaller) {
+    init(_ base: Base, group: ConstraintGroup) {
         self.base = base
-        self.installer = installer
+        self.installer = group
     }
 
     func root() -> Layout {
@@ -42,7 +42,7 @@ public final class Layout<Base> {
     }
 }
 
-final class ConstraintInstaller {
+public final class ConstraintGroup {
     private var constraints: [NSLayoutConstraint] = []
 
     func install(_ constraint: NSLayoutConstraint,
@@ -55,8 +55,12 @@ final class ConstraintInstaller {
         return constraint
     }
 
-    func activate() {
+    public func activate() {
         NSLayoutConstraint.activate(constraints)
+    }
+
+    public func deactivate() {
+        NSLayoutConstraint.deactivate(constraints)
     }
 }
 
@@ -69,16 +73,16 @@ private func makeDescription(_ constraint: NSLayoutConstraint, file: StaticStrin
 public extension Layout where Base: UIViewController {
     @available(iOS, deprecated: 11.0, message: "Use view.safeAreaLayoutGuide.topAnchor instead of topLayoutGuide.bottomAnchor")
     var top: Layout<UILayoutSupport> {
-        return cached(initial: .init(base.topLayoutGuide, installer: installer))
+        return cached(initial: .init(base.topLayoutGuide, group: installer))
     }
 
     @available(iOS, deprecated: 11.0, message: "Use view.safeAreaLayoutGuide.bottomAnchor instead of bottomLayoutGuide.topAnchor")
     var bottom: Layout<UILayoutSupport> {
-        return cached(initial: .init(base.bottomLayoutGuide, installer: installer))
+        return cached(initial: .init(base.bottomLayoutGuide, group: installer))
     }
 
     var view: Layout<UIView> {
-        return cached(initial: .init(base.view, installer: installer))
+        return cached(initial: .init(base.view, group: installer))
     }
 
     var safeAreaEdge: EdgeAnchor {
@@ -96,19 +100,19 @@ public extension Layout where Base: UIViewController {
 public extension Layout where Base: UIView {
     @available(iOS 11.0, *)
     var safeArea: Layout<UILayoutGuide> {
-        return cached(initial: .init(base.safeAreaLayoutGuide, installer: installer))
+        return cached(initial: .init(base.safeAreaLayoutGuide, group: installer))
     }
 
     var readableContent: Layout<UILayoutGuide> {
-        return cached(initial: .init(base.readableContentGuide, installer: installer))
+        return cached(initial: .init(base.readableContentGuide, group: installer))
     }
 
     var layoutMargins: Layout<UILayoutGuide> {
-        return cached(initial: .init(base.layoutMarginsGuide, installer: installer))
+        return cached(initial: .init(base.layoutMarginsGuide, group: installer))
     }
 
     var superview: Layout<UIView> {
-        return cached(initial: .init(base.superview!, installer: installer))
+        return cached(initial: .init(base.superview!, group: installer))
     }
 
     var firstBaseline: YAnchor {
@@ -194,12 +198,12 @@ public extension Layout where Base: UIView {
 public extension Layout where Base: UIScrollView {
     @available(iOS 11.0, *)
     var content: Layout<UILayoutGuide> {
-        return cached(initial: .init(base.contentLayoutGuide, installer: installer))
+        return cached(initial: .init(base.contentLayoutGuide, group: installer))
     }
 
     @available(iOS 11.0, *)
     var frame: Layout<UILayoutGuide> {
-        return cached(initial: .init(base.frameLayoutGuide, installer: installer))
+        return cached(initial: .init(base.frameLayoutGuide, group: installer))
     }
 }
 

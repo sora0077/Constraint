@@ -12,11 +12,11 @@ import Foundation
 // MARK: -
 public struct DAnchor {
     private let anchor: NSLayoutDimension
-    private let installer: ConstraintInstaller
+    private let group: ConstraintGroup
 
-    init(_ anchor: NSLayoutDimension, into installer: ConstraintInstaller) {
+    init(_ anchor: NSLayoutDimension, into group: ConstraintGroup) {
         self.anchor = anchor
-        self.installer = installer
+        self.group = group
     }
 }
 
@@ -30,7 +30,7 @@ extension DAnchor {
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         precondition(multiplier != 0)
-        return installer.install(
+        return group.install(
             anchor.constraint(equalTo: rhs.anchor, multiplier: multiplier, constant: constant),
             priority: priority, file, line)
     }
@@ -44,7 +44,7 @@ extension DAnchor {
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         precondition(multiplier != 0)
-        return installer.install(
+        return group.install(
             anchor.constraint(greaterThanOrEqualTo: rhs.anchor, multiplier: multiplier, constant: constant),
             priority: priority, file, line)
     }
@@ -58,7 +58,7 @@ extension DAnchor {
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         precondition(multiplier != 0)
-        return installer.install(
+        return group.install(
             anchor.constraint(lessThanOrEqualTo: rhs.anchor, multiplier: multiplier, constant: constant),
             priority: priority, file, line)
     }
@@ -71,7 +71,7 @@ extension DAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraint(equalToConstant: constant),
             priority: priority, file, line)
     }
@@ -82,7 +82,7 @@ extension DAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraint(greaterThanOrEqualToConstant: constant),
             priority: priority, file, line)
     }
@@ -93,7 +93,7 @@ extension DAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraint(lessThanOrEqualToConstant: constant),
             priority: priority, file, line)
     }

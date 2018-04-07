@@ -12,16 +12,16 @@ import Foundation
 // MARK: -
 public struct XAnchor {
     private let anchor: NSLayoutXAxisAnchor
-    private let installer: ConstraintInstaller
+    private let group: ConstraintGroup
 
-    init(_ anchor: NSLayoutXAxisAnchor, into installer: ConstraintInstaller) {
+    init(_ anchor: NSLayoutXAxisAnchor, into group: ConstraintGroup) {
         self.anchor = anchor
-        self.installer = installer
+        self.group = group
     }
 
     @available(iOS 10.0, *)
     public func anchorWithOffset(_ rhs: XAnchor) -> DAnchor {
-        return .init(anchor.anchorWithOffset(to: rhs.anchor), into: installer)
+        return .init(anchor.anchorWithOffset(to: rhs.anchor), into: group)
     }
 }
 
@@ -33,7 +33,7 @@ extension XAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraint(equalTo: rhs.anchor, constant: constant),
             priority: priority, file, line)
     }
@@ -45,7 +45,7 @@ extension XAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraint(greaterThanOrEqualTo: rhs.anchor, constant: constant),
             priority: priority, file, line)
     }
@@ -57,7 +57,7 @@ extension XAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraint(lessThanOrEqualTo: rhs.anchor, constant: constant),
             priority: priority, file, line)
     }
@@ -70,7 +70,7 @@ extension XAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraintEqualToSystemSpacingAfter(rhs.anchor, multiplier: multiplier),
             priority: priority, file, line)
     }
@@ -83,7 +83,7 @@ extension XAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraintGreaterThanOrEqualToSystemSpacingAfter(rhs.anchor, multiplier: multiplier),
             priority: priority, file, line)
     }
@@ -96,7 +96,7 @@ extension XAnchor {
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
-        return installer.install(
+        return group.install(
             anchor.constraintLessThanOrEqualToSystemSpacingAfter(rhs.anchor, multiplier: multiplier),
             priority: priority, file, line)
     }
