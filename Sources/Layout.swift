@@ -22,6 +22,13 @@ public struct Layout<Base> {
         self.base = base
         self.installer = installer
     }
+
+    func root() -> Layout {
+        if let view = base as? UIView {
+            view.translatesAutoresizingMaskIntoConstraints = false
+        }
+        return self
+    }
 }
 
 final class ConstraintInstaller {
@@ -49,6 +56,19 @@ private func makeDescription(_ constraint: NSLayoutConstraint, file: StaticStrin
 //
 // MARK: - UIView
 public extension Layout where Base: UIView {
+    @available(iOS 11.0, *)
+    var safeArea: Layout<UILayoutGuide> {
+        return .init(base.safeAreaLayoutGuide, installer: installer)
+    }
+
+    var readableContent: Layout<UILayoutGuide> {
+        return .init(base.readableContentGuide, installer: installer)
+    }
+
+    var layoutMargins: Layout<UILayoutGuide> {
+        return .init(base.layoutMarginsGuide, installer: installer)
+    }
+
     var superview: Layout<UIView> {
         return .init(base.superview!, installer: installer)
     }
@@ -123,6 +143,18 @@ public extension Layout where Base: UIView {
     }
 }
 
+public extension Layout where Base: UIScrollView {
+    @available(iOS 11.0, *)
+    var content: Layout<UILayoutGuide> {
+        return .init(base.contentLayoutGuide, installer: installer)
+    }
+
+    @available(iOS 11.0, *)
+    var frame: Layout<UILayoutGuide> {
+        return .init(base.frameLayoutGuide, installer: installer)
+    }
+}
+
 //
 // MARK: - UILayoutGuide
 public extension Layout where Base: UILayoutGuide {
@@ -190,7 +222,7 @@ public extension Layout where Base: UILayoutGuide {
 
 //
 // MARK: - UILayoutSupport
-public extension Layout where Base == UILayoutSupport {
+public extension Layout where Base: UILayoutSupport {
     var top: YAnchor {
         return .init(base.topAnchor, into: installer)
     }
