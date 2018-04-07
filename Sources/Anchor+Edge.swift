@@ -55,11 +55,11 @@ extension Int: EdgeInsets {
 public struct EdgeAnchor {
     private let topAnchor: YAnchor
     private let bottomAnchor: YAnchor
-    private let leadingAnchor: XAnchor
-    private let tralingAnchor: XAnchor
+    private let leftAnchor: XAnchor
+    private let rightAnchor: XAnchor
 
-    init(top: YAnchor, leading: XAnchor, bottom: YAnchor, trailing: XAnchor) {
-        (topAnchor, leadingAnchor, bottomAnchor, tralingAnchor) = (top, leading, bottom, trailing)
+    init(top: YAnchor, left: XAnchor, bottom: YAnchor, right: XAnchor) {
+        (topAnchor, leftAnchor, bottomAnchor, rightAnchor) = (top, left, bottom, right)
     }
 }
 
@@ -74,9 +74,9 @@ extension EdgeAnchor {
         ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
         return (
             topAnchor.equalTo(rhs.topAnchor, constant: inset._constraint_top, priority: priority, file, line),
-            leadingAnchor.equalTo(rhs.leadingAnchor, constant: inset._constraint_left, priority: priority, file, line),
+            leftAnchor.equalTo(rhs.leftAnchor, constant: inset._constraint_left, priority: priority, file, line),
             bottomAnchor.equalTo(rhs.bottomAnchor, constant: -inset._constraint_bottom, priority: priority, file, line),
-            tralingAnchor.equalTo(rhs.tralingAnchor, constant: -inset._constraint_right, priority: priority, file, line)
+            rightAnchor.equalTo(rhs.rightAnchor, constant: -inset._constraint_right, priority: priority, file, line)
         )
     }
 
@@ -89,9 +89,9 @@ extension EdgeAnchor {
         ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
         return (
             topAnchor.lessThanOrEqualTo(rhs.topAnchor, constant: inset._constraint_top, priority: priority, file, line),
-            leadingAnchor.lessThanOrEqualTo(rhs.leadingAnchor, constant: inset._constraint_left, priority: priority, file, line),
+            leftAnchor.lessThanOrEqualTo(rhs.leftAnchor, constant: inset._constraint_left, priority: priority, file, line),
             bottomAnchor.greaterThanOrEqualTo(rhs.bottomAnchor, constant: -inset._constraint_bottom, priority: priority, file, line),
-            tralingAnchor.greaterThanOrEqualTo(rhs.tralingAnchor, constant: -inset._constraint_right, priority: priority, file, line)
+            rightAnchor.greaterThanOrEqualTo(rhs.rightAnchor, constant: -inset._constraint_right, priority: priority, file, line)
         )
     }
 
@@ -104,9 +104,9 @@ extension EdgeAnchor {
         ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
         return (
             topAnchor.greaterThanOrEqualTo(rhs.topAnchor, constant: inset._constraint_top, priority: priority, file, line),
-            leadingAnchor.greaterThanOrEqualTo(rhs.leadingAnchor, constant: inset._constraint_left, priority: priority, file, line),
+            leftAnchor.greaterThanOrEqualTo(rhs.leftAnchor, constant: inset._constraint_left, priority: priority, file, line),
             bottomAnchor.lessThanOrEqualTo(rhs.bottomAnchor, constant: -inset._constraint_bottom, priority: priority, file, line),
-            tralingAnchor.lessThanOrEqualTo(rhs.tralingAnchor, constant: -inset._constraint_right, priority: priority, file, line)
+            rightAnchor.lessThanOrEqualTo(rhs.rightAnchor, constant: -inset._constraint_right, priority: priority, file, line)
         )
     }
 }

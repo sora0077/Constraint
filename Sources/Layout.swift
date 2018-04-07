@@ -105,7 +105,7 @@ public extension Layout where Base: UIView {
     }
 
     var edge: EdgeAnchor {
-        return .init(top: top, leading: leading, bottom: bottom, trailing: trailing)
+        return .init(top: top, left: leading, bottom: bottom, right: trailing)
     }
 }
 
@@ -161,7 +161,7 @@ extension Layout where Base: UILayoutGuide {
     }
 
     var edge: EdgeAnchor {
-        return .init(top: top, leading: leading, bottom: bottom, trailing: trailing)
+        return .init(top: top, left: leading, bottom: bottom, right: trailing)
     }
 }
 
