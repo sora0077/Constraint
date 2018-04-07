@@ -9,14 +9,15 @@
 import Foundation
 import class UIKit.UIView
 
-public struct Layout<Base> {
+public final class Layout<Base> {
     public enum Direction {
         case natural
         case leftToRight
     }
 
-    fileprivate let base: Base
-    fileprivate let installer: ConstraintInstaller
+    private let base: Base
+    private let installer: ConstraintInstaller
+    private var cache: [String: Any] = [:]
 
     init(_ base: Base, installer: ConstraintInstaller) {
         self.base = base
@@ -28,6 +29,16 @@ public struct Layout<Base> {
             view.translatesAutoresizingMaskIntoConstraints = false
         }
         return self
+    }
+
+    private func cached<T>(_ key: String = #function, initial: @autoclosure () -> T) -> T {
+        if let cached = cache[key] as? T {
+            return cached
+        } else {
+            let value = initial()
+            cache[key] = value
+            return value
+        }
     }
 }
 
@@ -54,91 +65,128 @@ private func makeDescription(_ constraint: NSLayoutConstraint, file: StaticStrin
 }
 
 //
+// MARK: - UIViewController
+public extension Layout where Base: UIViewController {
+    @available(iOS, deprecated: 11.0, message: "Use view.safeAreaLayoutGuide.topAnchor instead of topLayoutGuide.bottomAnchor")
+    var top: Layout<UILayoutSupport> {
+        return cached(initial: .init(base.topLayoutGuide, installer: installer))
+    }
+
+    @available(iOS, deprecated: 11.0, message: "Use view.safeAreaLayoutGuide.bottomAnchor instead of bottomLayoutGuide.topAnchor")
+    var bottom: Layout<UILayoutSupport> {
+        return cached(initial: .init(base.bottomLayoutGuide, installer: installer))
+    }
+
+    var view: Layout<UIView> {
+        return cached(initial: .init(base.view, installer: installer))
+    }
+
+    var safeAreaEdge: EdgeAnchor {
+        let view = self.view
+        if #available(iOS 11.0, *) {
+            return view.safeAreaEdge
+        } else {
+            return cached(initial: .init(top: top.bottom, left: view.leading, bottom: bottom.top, right: view.trailing))
+        }
+    }
+}
+
+//
 // MARK: - UIView
 public extension Layout where Base: UIView {
     @available(iOS 11.0, *)
     var safeArea: Layout<UILayoutGuide> {
-        return .init(base.safeAreaLayoutGuide, installer: installer)
+        return cached(initial: .init(base.safeAreaLayoutGuide, installer: installer))
     }
 
     var readableContent: Layout<UILayoutGuide> {
-        return .init(base.readableContentGuide, installer: installer)
+        return cached(initial: .init(base.readableContentGuide, installer: installer))
     }
 
     var layoutMargins: Layout<UILayoutGuide> {
-        return .init(base.layoutMarginsGuide, installer: installer)
+        return cached(initial: .init(base.layoutMarginsGuide, installer: installer))
     }
 
     var superview: Layout<UIView> {
-        return .init(base.superview!, installer: installer)
+        return cached(initial: .init(base.superview!, installer: installer))
     }
 
     var firstBaseline: YAnchor {
-        return .init(base.firstBaselineAnchor, into: installer)
+        return cached(initial: .init(base.firstBaselineAnchor, into: installer))
     }
 
     var lastBaseline: YAnchor {
-        return .init(base.lastBaselineAnchor, into: installer)
+        return cached(initial: .init(base.lastBaselineAnchor, into: installer))
     }
 
     var centerX: XAnchor {
-        return .init(base.centerXAnchor, into: installer)
+        return cached(initial: .init(base.centerXAnchor, into: installer))
     }
 
     var centerY: YAnchor {
-        return .init(base.centerYAnchor, into: installer)
+        return cached(initial: .init(base.centerYAnchor, into: installer))
     }
 
     var top: YAnchor {
-        return .init(base.topAnchor, into: installer)
+        return cached(initial: .init(base.topAnchor, into: installer))
     }
 
     var bottom: YAnchor {
-        return .init(base.bottomAnchor, into: installer)
+        return cached(initial: .init(base.bottomAnchor, into: installer))
     }
 
     var right: XAnchor {
-        return .init(base.rightAnchor, into: installer)
+        return cached(initial: .init(base.rightAnchor, into: installer))
     }
 
     var left: XAnchor {
-        return .init(base.leftAnchor, into: installer)
+        return cached(initial: .init(base.leftAnchor, into: installer))
     }
 
     var leading: XAnchor {
-        return .init(base.leadingAnchor, into: installer)
+        return cached(initial: .init(base.leadingAnchor, into: installer))
     }
 
     var trailing: XAnchor {
-        return .init(base.trailingAnchor, into: installer)
+        return cached(initial: .init(base.trailingAnchor, into: installer))
     }
 
     var width: DAnchor {
-        return .init(base.widthAnchor, into: installer)
+        return cached(initial: .init(base.widthAnchor, into: installer))
     }
 
     var height: DAnchor {
-        return .init(base.heightAnchor, into: installer)
+        return cached(initial: .init(base.heightAnchor, into: installer))
     }
 
     var center: XYAnchor {
-        return .init(x: centerX, y: centerY)
+        return cached(initial: .init(x: centerX, y: centerY))
     }
 
     var size: SizeAnchor {
-        return .init(width: width, height: height)
+        return cached(initial: .init(width: width, height: height))
     }
 
     var edge: EdgeAnchor {
-        return .init(top: top, left: leading, bottom: bottom, right: trailing)
+        return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
     }
 
     func edge(_ direction: Direction) -> EdgeAnchor {
         switch direction {
         case .natural:
-            return .init(top: top, left: leading, bottom: bottom, right: trailing)
+            return cached("\(#function)\(#line)", initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
         case .leftToRight:
-            return .init(top: top, left: left, bottom: bottom, right: right)
+            return cached("\(#function)\(#line)", initial: .init(top: top, left: left, bottom: bottom, right: right))
+        }
+    }
+
+    var safeAreaEdge: EdgeAnchor {
+        if #available(iOS 11.0, *) {
+            let safeArea = self.safeArea
+            return cached(initial: .init(top: safeArea.top, left: safeArea.leading,
+                                         bottom: safeArea.bottom, right: safeArea.trailing))
+        } else {
+            return edge
         }
     }
 }
@@ -146,12 +194,12 @@ public extension Layout where Base: UIView {
 public extension Layout where Base: UIScrollView {
     @available(iOS 11.0, *)
     var content: Layout<UILayoutGuide> {
-        return .init(base.contentLayoutGuide, installer: installer)
+        return cached(initial: .init(base.contentLayoutGuide, installer: installer))
     }
 
     @available(iOS 11.0, *)
     var frame: Layout<UILayoutGuide> {
-        return .init(base.frameLayoutGuide, installer: installer)
+        return cached(initial: .init(base.frameLayoutGuide, installer: installer))
     }
 }
 
@@ -159,63 +207,63 @@ public extension Layout where Base: UIScrollView {
 // MARK: - UILayoutGuide
 public extension Layout where Base: UILayoutGuide {
     var centerX: XAnchor {
-        return .init(base.centerXAnchor, into: installer)
+        return cached(initial: .init(base.centerXAnchor, into: installer))
     }
 
     var centerY: YAnchor {
-        return .init(base.centerYAnchor, into: installer)
+        return cached(initial: .init(base.centerYAnchor, into: installer))
     }
 
     var top: YAnchor {
-        return .init(base.topAnchor, into: installer)
+        return cached(initial: .init(base.topAnchor, into: installer))
     }
 
     var bottom: YAnchor {
-        return .init(base.bottomAnchor, into: installer)
+        return cached(initial: .init(base.bottomAnchor, into: installer))
     }
 
     var right: XAnchor {
-        return .init(base.rightAnchor, into: installer)
+        return cached(initial: .init(base.rightAnchor, into: installer))
     }
 
     var left: XAnchor {
-        return .init(base.leftAnchor, into: installer)
+        return cached(initial: .init(base.leftAnchor, into: installer))
     }
 
     var leading: XAnchor {
-        return .init(base.leadingAnchor, into: installer)
+        return cached(initial: .init(base.leadingAnchor, into: installer))
     }
 
     var trailing: XAnchor {
-        return .init(base.trailingAnchor, into: installer)
+        return cached(initial: .init(base.trailingAnchor, into: installer))
     }
 
     var width: DAnchor {
-        return .init(base.widthAnchor, into: installer)
+        return cached(initial: .init(base.widthAnchor, into: installer))
     }
 
     var height: DAnchor {
-        return .init(base.heightAnchor, into: installer)
+        return cached(initial: .init(base.heightAnchor, into: installer))
     }
 
     var center: XYAnchor {
-        return .init(x: centerX, y: centerY)
+        return cached(initial: .init(x: centerX, y: centerY))
     }
 
     var size: SizeAnchor {
-        return .init(width: width, height: height)
+        return cached(initial: .init(width: width, height: height))
     }
 
     var edge: EdgeAnchor {
-        return .init(top: top, left: leading, bottom: bottom, right: trailing)
+        return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
     }
 
     func edge(_ direction: Direction) -> EdgeAnchor {
         switch direction {
         case .natural:
-            return .init(top: top, left: leading, bottom: bottom, right: trailing)
+            return cached("\(#function)\(#line)", initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
         case .leftToRight:
-            return .init(top: top, left: left, bottom: bottom, right: right)
+            return cached("\(#function)\(#line)", initial: .init(top: top, left: left, bottom: bottom, right: right))
         }
     }
 }
@@ -224,14 +272,14 @@ public extension Layout where Base: UILayoutGuide {
 // MARK: - UILayoutSupport
 public extension Layout where Base: UILayoutSupport {
     var top: YAnchor {
-        return .init(base.topAnchor, into: installer)
+        return cached(initial: .init(base.topAnchor, into: installer))
     }
 
     var bottom: YAnchor {
-        return .init(base.bottomAnchor, into: installer)
+        return cached(initial: .init(base.bottomAnchor, into: installer))
     }
 
     var height: DAnchor {
-        return .init(base.heightAnchor, into: installer)
+        return cached(initial: .init(base.heightAnchor, into: installer))
     }
 }

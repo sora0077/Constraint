@@ -32,14 +32,20 @@ class ConstraintTests: XCTestCase {
 
         constrain(a) { a in
             #sourceLocation(file: "filename", line: 10)
-            let constraints = a.edge.equalTo(a.superview.edge, inset: 5)
+            let constraints = a.edge.equalTo(a.superview.edge, inset: 5, priority: .defaultHigh)
             #sourceLocation()
 
-            XCTAssertEqual(constraints.top.identifier, "@filename#10")
-            XCTAssertEqual(constraints.leading.identifier, "@filename#10")
-            XCTAssertEqual(constraints.bottom.identifier, "@filename#10")
-            XCTAssertEqual(constraints.trailing.identifier, "@filename#10")
+            let all = [constraints.top, constraints.leading, constraints.bottom, constraints.trailing]
+            all.forEach {
+                XCTAssertEqual($0.priority, .defaultHigh)
+                XCTAssertEqual($0.identifier, "@filename#10")
+            }
+
+            XCTAssertEqual(constraints.top.constant, 5)
+            XCTAssertEqual(constraints.bottom.constant, -5)
         }
+
+        XCTAssertEqual(a.frame, .zero)
 
         parent.layoutIfNeeded()
         XCTAssertEqual(parent.frame, frame)
