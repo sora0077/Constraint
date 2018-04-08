@@ -51,4 +51,35 @@ class ConstraintTests: XCTestCase {
         XCTAssertEqual(parent.frame, frame)
         XCTAssertEqual(a.frame, parent.bounds.insetBy(dx: 5, dy: 5))
     }
+
+    func test_equalToSystemSpacingSuperviewEdge() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        let a = UIView()
+        parent.addSubview(a)
+
+        constrain(a) { a in
+            #sourceLocation(file: "filename", line: 10)
+            let constraints = a.edge.equalToSystemSpacingInner(a.superview.edge, priority: .defaultHigh)
+            #sourceLocation()
+
+            let all = [constraints.top, constraints.leading, constraints.bottom, constraints.trailing]
+            all.forEach {
+                XCTAssertEqual($0.priority, .defaultHigh)
+                XCTAssertEqual($0.identifier, "@filename#10")
+            }
+
+            XCTAssertEqual(constraints.top.constant, 8)
+            XCTAssertEqual(constraints.bottom.constant, 8)
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame, parent.bounds.insetBy(dx: 8, dy: 8))
+    }
 }

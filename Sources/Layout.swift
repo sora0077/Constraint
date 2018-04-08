@@ -8,6 +8,9 @@
 
 import Foundation
 import class UIKit.UIView
+import class UIKit.UIViewController
+import class UIKit.UILayoutGuide
+import protocol UIKit.UILayoutSupport
 
 public final class Layout<Base> {
     public enum Direction {
@@ -25,8 +28,12 @@ public final class Layout<Base> {
     }
 
     func root() -> Layout {
-        if let view = base as? UIView {
+        switch base {
+        case let view as UIView:
             view.translatesAutoresizingMaskIntoConstraints = false
+
+        default:
+            break
         }
         return self
     }
@@ -40,32 +47,6 @@ public final class Layout<Base> {
             return value
         }
     }
-}
-
-public final class ConstraintGroup {
-    private var constraints: [NSLayoutConstraint] = []
-
-    func install(_ constraint: NSLayoutConstraint,
-                 priority: UILayoutPriority,
-                 _ file: StaticString, _ line: UInt
-    ) -> NSLayoutConstraint {
-        constraint.priority = priority
-        constraint.identifier = makeDescription(constraint, file: file, line: line)
-        constraints.append(constraint)
-        return constraint
-    }
-
-    public func activate() {
-        NSLayoutConstraint.activate(constraints)
-    }
-
-    public func deactivate() {
-        NSLayoutConstraint.deactivate(constraints)
-    }
-}
-
-private func makeDescription(_ constraint: NSLayoutConstraint, file: StaticString, line: UInt) -> String {
-    return "@\((file.description as NSString).lastPathComponent)#\(line)"
 }
 
 //
@@ -85,12 +66,11 @@ public extension Layout where Base: UIViewController {
         return cached(initial: .init(base.view, group: installer))
     }
 
-    var safeAreaEdge: EdgeAnchor {
-        let view = self.view
+    var safeArea: SafeAreaLayoutGuideCompatible {
         if #available(iOS 11.0, *) {
-            return view.safeAreaEdge
+            return cached(initial: .init(view.safeArea))
         } else {
-            return cached(initial: .init(top: top.bottom, left: view.leading, bottom: bottom.top, right: view.trailing))
+            return cached(initial: .init(top: top.bottom, bottom: bottom.top, view: view))
         }
     }
 }
@@ -103,11 +83,11 @@ public extension Layout where Base: UIView {
         return cached(initial: .init(base.safeAreaLayoutGuide, group: installer))
     }
 
-    var readableContent: Layout<UILayoutGuide> {
+    var readableContentGuide: Layout<UILayoutGuide> {
         return cached(initial: .init(base.readableContentGuide, group: installer))
     }
 
-    var layoutMargins: Layout<UILayoutGuide> {
+    var layoutMarginsGuide: Layout<UILayoutGuide> {
         return cached(initial: .init(base.layoutMarginsGuide, group: installer))
     }
 
@@ -139,12 +119,12 @@ public extension Layout where Base: UIView {
         return cached(initial: .init(base.bottomAnchor, into: installer))
     }
 
-    var right: XAnchor {
-        return cached(initial: .init(base.rightAnchor, into: installer))
-    }
-
     var left: XAnchor {
         return cached(initial: .init(base.leftAnchor, into: installer))
+    }
+
+    var right: XAnchor {
+        return cached(initial: .init(base.rightAnchor, into: installer))
     }
 
     var leading: XAnchor {
@@ -183,26 +163,16 @@ public extension Layout where Base: UIView {
             return cached("\(#function)\(#line)", initial: .init(top: top, left: left, bottom: bottom, right: right))
         }
     }
-
-    var safeAreaEdge: EdgeAnchor {
-        if #available(iOS 11.0, *) {
-            let safeArea = self.safeArea
-            return cached(initial: .init(top: safeArea.top, left: safeArea.leading,
-                                         bottom: safeArea.bottom, right: safeArea.trailing))
-        } else {
-            return edge
-        }
-    }
 }
 
 public extension Layout where Base: UIScrollView {
     @available(iOS 11.0, *)
-    var content: Layout<UILayoutGuide> {
+    var contentLayoutGuide: Layout<UILayoutGuide> {
         return cached(initial: .init(base.contentLayoutGuide, group: installer))
     }
 
     @available(iOS 11.0, *)
-    var frame: Layout<UILayoutGuide> {
+    var frameLayoutGuide: Layout<UILayoutGuide> {
         return cached(initial: .init(base.frameLayoutGuide, group: installer))
     }
 }
@@ -226,12 +196,12 @@ public extension Layout where Base: UILayoutGuide {
         return cached(initial: .init(base.bottomAnchor, into: installer))
     }
 
-    var right: XAnchor {
-        return cached(initial: .init(base.rightAnchor, into: installer))
-    }
-
     var left: XAnchor {
         return cached(initial: .init(base.leftAnchor, into: installer))
+    }
+
+    var right: XAnchor {
+        return cached(initial: .init(base.rightAnchor, into: installer))
     }
 
     var leading: XAnchor {

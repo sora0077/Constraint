@@ -61,7 +61,7 @@ extension XYAnchor {
     @discardableResult
     public func greaterThanOrEqualTo(
         _ rhs: XYAnchor,
-        constant: CGPoint = .zero,
+        constant: Point = CGPoint.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (x: NSLayoutConstraint, y: NSLayoutConstraint) {
@@ -74,7 +74,7 @@ extension XYAnchor {
     @discardableResult
     public func lessThanOrEqualTo(
         _ rhs: XYAnchor,
-        constant: CGPoint = .zero,
+        constant: Point = CGPoint.zero,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (x: NSLayoutConstraint, y: NSLayoutConstraint) {

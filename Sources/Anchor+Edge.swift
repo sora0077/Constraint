@@ -110,3 +110,53 @@ extension EdgeAnchor {
         )
     }
 }
+
+extension EdgeAnchor {
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func equalToSystemSpacingInner(
+        _ rhs: EdgeAnchor,
+        multiplier: EdgeInsets = 1,
+        priority: UILayoutPriority = .required,
+        _ file: StaticString = #file, _ line: UInt = #line
+        ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
+        return (
+            topAnchor.equalToSystemSpacingBelow(rhs.topAnchor, multiplier: multiplier._constraint_top, priority: priority, file, line),
+            leftAnchor.equalToSystemSpacingAfter(rhs.leftAnchor, multiplier: multiplier._constraint_left, priority: priority, file, line),
+            rhs.bottomAnchor.equalToSystemSpacingBelow(bottomAnchor, multiplier: multiplier._constraint_bottom, priority: priority, file, line),
+            rhs.rightAnchor.equalToSystemSpacingAfter(rightAnchor, multiplier: multiplier._constraint_right, priority: priority, file, line)
+        )
+    }
+
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func greaterThanOrEqualToSystemSpacingInner(
+        _ rhs: EdgeAnchor,
+        multiplier: EdgeInsets = 1,
+        priority: UILayoutPriority = .required,
+        _ file: StaticString = #file, _ line: UInt = #line
+        ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
+        return (
+            topAnchor.lessThanOrEqualToSystemSpacingBelow(rhs.topAnchor, multiplier: multiplier._constraint_top, priority: priority, file, line),
+            leftAnchor.lessThanOrEqualToSystemSpacingAfter(rhs.leftAnchor, multiplier: multiplier._constraint_left, priority: priority, file, line),
+            rhs.bottomAnchor.lessThanOrEqualToSystemSpacingBelow(bottomAnchor, multiplier: multiplier._constraint_bottom, priority: priority, file, line),
+            rhs.rightAnchor.lessThanOrEqualToSystemSpacingAfter(rightAnchor, multiplier: multiplier._constraint_right, priority: priority, file, line)
+        )
+    }
+
+    @available(iOS 11.0, *)
+    @discardableResult
+    public func lessThanOrEqualToSystemSpacingInner(
+        _ rhs: EdgeAnchor,
+        multiplier: EdgeInsets = 1,
+        priority: UILayoutPriority = .required,
+        _ file: StaticString = #file, _ line: UInt = #line
+        ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
+        return (
+            topAnchor.greaterThanOrEqualToSystemSpacingBelow(rhs.topAnchor, multiplier: multiplier._constraint_top, priority: priority, file, line),
+            leftAnchor.greaterThanOrEqualToSystemSpacingAfter(rhs.leftAnchor, multiplier: multiplier._constraint_left, priority: priority, file, line),
+            rhs.bottomAnchor.greaterThanOrEqualToSystemSpacingBelow(bottomAnchor, multiplier: multiplier._constraint_bottom, priority: priority, file, line),
+            rhs.rightAnchor.greaterThanOrEqualToSystemSpacingAfter(rightAnchor, multiplier: multiplier._constraint_right, priority: priority, file, line)
+        )
+    }
+}
