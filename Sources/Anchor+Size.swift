@@ -49,8 +49,8 @@ extension SizeAnchor {
     @discardableResult
     public func equalTo(
         _ rhs: SizeAnchor,
-        multiplier: Size = CGSize(width: 1, height: 1),
-        constant: Size = CGSize.zero,
+        multiplier: Size = 1,
+        constant: Size = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
@@ -67,8 +67,8 @@ extension SizeAnchor {
     @discardableResult
     public func greaterThanOrEqualTo(
         _ rhs: SizeAnchor,
-        multiplier: Size = CGSize(width: 1, height: 1),
-        constant: Size = CGSize.zero,
+        multiplier: Size = 1,
+        constant: Size = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {
@@ -85,8 +85,8 @@ extension SizeAnchor {
     @discardableResult
     public func lessThanOrEqualTo(
         _ rhs: SizeAnchor,
-        multiplier: Size = CGSize(width: 1, height: 1),
-        constant: Size = CGSize.zero,
+        multiplier: Size = 1,
+        constant: Size = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (width: NSLayoutConstraint, height: NSLayoutConstraint) {

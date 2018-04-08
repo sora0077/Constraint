@@ -68,7 +68,7 @@ extension EdgeAnchor {
     @discardableResult
     public func equalTo(
         _ rhs: EdgeAnchor,
-        inset: EdgeInsets = UIEdgeInsets.zero,
+        inset: EdgeInsets = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
@@ -83,7 +83,7 @@ extension EdgeAnchor {
     @discardableResult
     public func greaterThanOrEqualTo(
         _ rhs: EdgeAnchor,
-        inset: EdgeInsets = UIEdgeInsets.zero,
+        inset: EdgeInsets = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
@@ -98,7 +98,7 @@ extension EdgeAnchor {
     @discardableResult
     public func lessThanOrEqualTo(
         _ rhs: EdgeAnchor,
-        inset: EdgeInsets = UIEdgeInsets.zero,
+        inset: EdgeInsets = 0,
         priority: UILayoutPriority = .required,
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
