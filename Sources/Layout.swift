@@ -13,11 +13,6 @@ import class UIKit.UILayoutGuide
 import protocol UIKit.UILayoutSupport
 
 public final class Layout<Base> {
-    public enum Direction {
-        case natural
-        case leftToRight
-    }
-
     private let base: Base
     private let installer: ConstraintGroup
     private var cache: [String: Any] = [:]
@@ -155,13 +150,8 @@ public extension Layout where Base: UIView {
         return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
     }
 
-    func edge(_ direction: Direction) -> EdgeAnchor {
-        switch direction {
-        case .natural:
-            return cached("\(#function)\(#line)", initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
-        case .leftToRight:
-            return cached("\(#function)\(#line)", initial: .init(top: top, left: left, bottom: bottom, right: right))
-        }
+    var strictEdge: EdgeAnchor {
+        return cached(initial: .init(top: top, left: left, bottom: bottom, right: right))
     }
 }
 
@@ -232,13 +222,8 @@ public extension Layout where Base: UILayoutGuide {
         return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
     }
 
-    func edge(_ direction: Direction) -> EdgeAnchor {
-        switch direction {
-        case .natural:
-            return cached("\(#function)\(#line)", initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
-        case .leftToRight:
-            return cached("\(#function)\(#line)", initial: .init(top: top, left: left, bottom: bottom, right: right))
-        }
+    var strictEdge: EdgeAnchor {
+        return cached(initial: .init(top: top, left: left, bottom: bottom, right: right))
     }
 }
 

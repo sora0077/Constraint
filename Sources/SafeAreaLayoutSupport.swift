@@ -122,4 +122,13 @@ public extension SafeAreaLayoutGuideCompatible {
             return .init(top: top, left: view.leading, bottom: bottom, right: view.trailing)
         }
     }
+
+    var strictEdge: EdgeAnchor {
+        switch inner {
+        case .ios11(let layout):
+            return layout.strictEdge
+        case .ios10(let top, let bottom, _):
+            return .init(top: top, left: left, bottom: bottom, right: right)
+        }
+    }
 }

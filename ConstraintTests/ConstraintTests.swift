@@ -22,9 +22,6 @@ class ConstraintTests: XCTestCase {
     }
 
     func test_equalToSuperviewEdge() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-
         let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
         let parent = UIView(frame: frame)
         let a = UIView()
@@ -53,9 +50,6 @@ class ConstraintTests: XCTestCase {
     }
 
     func test_equalToSystemSpacingSuperviewEdge() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-
         let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
         let parent = UIView(frame: frame)
         let a = UIView()
@@ -81,5 +75,23 @@ class ConstraintTests: XCTestCase {
         parent.layoutIfNeeded()
         XCTAssertEqual(parent.frame, frame)
         XCTAssertEqual(a.frame, parent.bounds.insetBy(dx: 8, dy: 8))
+    }
+
+    func test_rightToLeft() {
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        parent.semanticContentAttribute = .forceRightToLeft
+        let a = UIView()
+        parent.addSubview(a)
+
+        constrain(a) { a in
+            a.edge.equalTo(a.superview.edge, inset: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 20))
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame, CGRect(x: 20, y: 0, width: 170, height: 200))
     }
 }
