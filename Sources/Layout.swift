@@ -154,6 +154,36 @@ public extension Layout where Base: UIView {
     var strictEdge: EdgeAnchor {
         return cached(initial: .init(top: top, left: left, bottom: bottom, right: right))
     }
+
+    @discardableResult
+    func width(hugging: UILayoutPriority? = nil, compressionResistance: UILayoutPriority? = nil) -> DAnchor {
+        if let hugging = hugging {
+            base.setContentHuggingPriority(hugging, for: .horizontal)
+        }
+        if let compressionResistance = compressionResistance {
+            base.setContentCompressionResistancePriority(compressionResistance, for: .horizontal)
+        }
+        return width
+    }
+
+    @discardableResult
+    func height(hugging: UILayoutPriority? = nil, compressionResistance: UILayoutPriority? = nil) -> DAnchor {
+        if let hugging = hugging {
+            base.setContentHuggingPriority(hugging, for: .vertical)
+        }
+        if let compressionResistance = compressionResistance {
+            base.setContentCompressionResistancePriority(compressionResistance, for: .vertical)
+        }
+        return height
+    }
+
+    func contentHuggingPriority(for axis: UILayoutConstraintAxis) -> UILayoutPriority {
+        return base.contentHuggingPriority(for: axis)
+    }
+
+    func contentCompressionResistancePriority(for axis: UILayoutConstraintAxis) -> UILayoutPriority {
+        return base.contentCompressionResistancePriority(for: axis)
+    }
 }
 
 public extension Layout where Base: UIScrollView {
