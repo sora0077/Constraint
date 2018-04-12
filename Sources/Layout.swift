@@ -48,12 +48,12 @@ public final class Layout<Base> {
 // MARK: - UIViewController
 public extension Layout where Base: UIViewController {
     @available(iOS, deprecated: 11.0, message: "Use view.safeAreaLayoutGuide.topAnchor instead of topLayoutGuide.bottomAnchor")
-    var top: Layout<UILayoutSupport> {
+    var topLayoutGuide: Layout<UILayoutSupport> {
         return cached(initial: .init(base.topLayoutGuide, group: installer))
     }
 
     @available(iOS, deprecated: 11.0, message: "Use view.safeAreaLayoutGuide.bottomAnchor instead of bottomLayoutGuide.topAnchor")
-    var bottom: Layout<UILayoutSupport> {
+    var bottomLayoutGuide: Layout<UILayoutSupport> {
         return cached(initial: .init(base.bottomLayoutGuide, group: installer))
     }
 
@@ -61,11 +61,12 @@ public extension Layout where Base: UIViewController {
         return cached(initial: .init(base.view, group: installer))
     }
 
+    @available(iOS, deprecated: 11.0, message: "Use view.safeArea directly")
     var safeArea: SafeAreaLayoutGuideCompatible {
         if #available(iOS 11.0, *) {
-            return cached(initial: .init(view.safeArea))
+            return view.safeArea
         } else {
-            return cached(initial: .init(top: top.bottom, bottom: bottom.top, view: view))
+            return cached(initial: SafeAreaLayoutGuideUnderOS10(top: topLayoutGuide.bottom, bottom: bottomLayoutGuide.top, view: view))
         }
     }
 }
