@@ -13,6 +13,7 @@
 		D9151AAD207A3F2200319AEB /* ConstraintGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9151AAC207A3F2200319AEB /* ConstraintGroup.swift */; };
 		D9151AAF207A544400319AEB /* SafeAreaLayoutSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9151AAE207A544400319AEB /* SafeAreaLayoutSupport.swift */; };
 		D939C78D2080F8BA00497078 /* constrain+chain(horizontal).swift in Sources */ = {isa = PBXBuildFile; fileRef = D939C78C2080F8BA00497078 /* constrain+chain(horizontal).swift */; };
+		D939C78F2081BBFF00497078 /* constrain+chain(vertical).swift in Sources */ = {isa = PBXBuildFile; fileRef = D939C78E2081BBFF00497078 /* constrain+chain(vertical).swift */; };
 		D9636D2F2077967300492614 /* Anchor+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9636D2E2077967300492614 /* Anchor+Size.swift */; };
 		D9636D312078774E00492614 /* Anchor+XY.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9636D302078774E00492614 /* Anchor+XY.swift */; };
 		D9636D332078E6CA00492614 /* Anchor+X.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9636D322078E6CA00492614 /* Anchor+X.swift */; };
@@ -42,6 +43,7 @@
 		D9151AAC207A3F2200319AEB /* ConstraintGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintGroup.swift; sourceTree = "<group>"; };
 		D9151AAE207A544400319AEB /* SafeAreaLayoutSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeAreaLayoutSupport.swift; sourceTree = "<group>"; };
 		D939C78C2080F8BA00497078 /* constrain+chain(horizontal).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "constrain+chain(horizontal).swift"; sourceTree = "<group>"; };
+		D939C78E2081BBFF00497078 /* constrain+chain(vertical).swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "constrain+chain(vertical).swift"; sourceTree = "<group>"; };
 		D9636D2E2077967300492614 /* Anchor+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Anchor+Size.swift"; sourceTree = "<group>"; };
 		D9636D302078774E00492614 /* Anchor+XY.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Anchor+XY.swift"; sourceTree = "<group>"; };
 		D9636D322078E6CA00492614 /* Anchor+X.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Anchor+X.swift"; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				D9F71C01207679CD00FA22AE /* Anchor+Edge.swift */,
 				D9F71BFF2076727700FA22AE /* constrain.swift */,
 				D939C78C2080F8BA00497078 /* constrain+chain(horizontal).swift */,
+				D939C78E2081BBFF00497078 /* constrain+chain(vertical).swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 				D9151AAF207A544400319AEB /* SafeAreaLayoutSupport.swift in Sources */,
 				D9636D332078E6CA00492614 /* Anchor+X.swift in Sources */,
 				D9F71C02207679CD00FA22AE /* Anchor+Edge.swift in Sources */,
+				D939C78F2081BBFF00497078 /* constrain+chain(vertical).swift in Sources */,
 				D939C78D2080F8BA00497078 /* constrain+chain(horizontal).swift in Sources */,
 				D9151AAD207A3F2200319AEB /* ConstraintGroup.swift in Sources */,
 				D9636D312078774E00492614 /* Anchor+XY.swift in Sources */,
