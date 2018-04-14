@@ -20,7 +20,7 @@ public struct YAnchor {
     }
 
     @available(iOS 10.0, *)
-    public func anchorWithOffset(_ rhs: YAnchor) -> DAnchor {
+    public func anchorWithOffset(to rhs: YAnchor) -> DAnchor {
         return .init(anchor.anchorWithOffset(to: rhs.anchor), into: group)
     }
 }
