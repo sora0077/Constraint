@@ -182,4 +182,32 @@ class ConstraintTests: XCTestCase {
         XCTAssertEqual(a.frame.origin.y, b.frame.origin.y)
         XCTAssertEqual(b.frame.origin.y, 8)
     }
+
+    func test_alignBottom() {
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        let a = UIView()
+        let b = UIView()
+        parent.addSubview(a)
+        parent.addSubview(b)
+
+        constrain(a, b) { a, b in
+            let superview = a.superview
+            a.bottom.equalTo(superview.bottom, constant: 8)
+            a.leading.equalTo(superview.leading)
+            a.trailing.equalTo(superview.trailing)
+            b.leading.equalTo(superview.leading)
+            b.trailing.equalTo(superview.trailing)
+
+            align(bottom: a, b)
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+        XCTAssertEqual(b.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame.origin.y, b.frame.origin.y)
+        XCTAssertEqual(b.frame.origin.y, frame.height + 8)
+    }
 }
