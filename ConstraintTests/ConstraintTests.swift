@@ -94,4 +94,34 @@ class ConstraintTests: XCTestCase {
         XCTAssertEqual(parent.frame, frame)
         XCTAssertEqual(a.frame, CGRect(x: 20, y: 0, width: 170, height: 200))
     }
+
+    func test_stackHorizontal() {
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        let a = UIView()
+        let b = UIView()
+        parent.addSubview(a)
+        parent.addSubview(b)
+
+        constrain(a, b) { a, b in
+            let superview = a.superview
+            a.top.equalTo(superview.top)
+            a.bottom.equalTo(superview.bottom)
+            a.width.equalTo(100)
+
+            stack(horizontal: a, 10, b)
+            a.leading.equalTo(superview.leading)
+            b.trailing.equalTo(superview.trailing)
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+        XCTAssertEqual(b.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame.width, 100)
+        XCTAssertEqual(a.frame.maxX + 10, b.frame.origin.x)
+        XCTAssertEqual(b.frame.width, 90)
+    }
+
 }
