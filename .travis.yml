@@ -1,0 +1,4 @@
+os: osx
+osx_image: xcode9.3
+language: objective-c
+script: xcodebuild clean test -sdk iphonesimulator -scheme Constraint -destination 'platform=iOS Simulator,name=iPhone 8'

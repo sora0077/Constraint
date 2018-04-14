@@ -152,4 +152,118 @@ class ConstraintTests: XCTestCase {
         XCTAssertEqual(a.frame.maxY + 10, b.frame.origin.y)
         XCTAssertEqual(b.frame.height, 90)
     }
+
+    func test_alignTop() {
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        let a = UIView()
+        let b = UIView()
+        parent.addSubview(a)
+        parent.addSubview(b)
+
+        constrain(a, b) { a, b in
+            let superview = a.superview
+            a.top.equalTo(superview.top, constant: 8)
+            a.leading.equalTo(superview.leading)
+            a.trailing.equalTo(superview.trailing)
+            a.bottom.equalTo(superview.bottom)
+            b.leading.equalTo(superview.leading)
+            b.trailing.equalTo(superview.trailing)
+            b.bottom.equalTo(superview.bottom)
+
+            align(top: a, b)
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+        XCTAssertEqual(b.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame.origin.y, b.frame.origin.y)
+        XCTAssertEqual(b.frame.origin.y, 8)
+    }
+
+    func test_alignBottom() {
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        let a = UIView()
+        let b = UIView()
+        parent.addSubview(a)
+        parent.addSubview(b)
+
+        constrain(a, b) { a, b in
+            let superview = a.superview
+            a.bottom.equalTo(superview.bottom, constant: 8)
+            a.leading.equalTo(superview.leading)
+            a.trailing.equalTo(superview.trailing)
+            b.leading.equalTo(superview.leading)
+            b.trailing.equalTo(superview.trailing)
+
+            align(bottom: a, b)
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+        XCTAssertEqual(b.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame.origin.y, b.frame.origin.y)
+        XCTAssertEqual(b.frame.origin.y, frame.height + 8)
+    }
+
+    func test_alignLeading() {
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        let a = UIView()
+        let b = UIView()
+        parent.addSubview(a)
+        parent.addSubview(b)
+
+        constrain(a, b) { a, b in
+            let superview = a.superview
+            a.leading.equalTo(superview.leading, constant: 8)
+            a.top.equalTo(superview.top)
+            a.bottom.equalTo(superview.bottom)
+            b.top.equalTo(superview.top)
+            b.bottom.equalTo(superview.bottom)
+
+            align(leading: a, b)
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+        XCTAssertEqual(b.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame.origin.x, b.frame.origin.x)
+        XCTAssertEqual(b.frame.origin.x, 8)
+    }
+
+    func test_alignTrailing() {
+        let frame = CGRect(x: 10, y: 10, width: 200, height: 200)
+        let parent = UIView(frame: frame)
+        let a = UIView()
+        let b = UIView()
+        parent.addSubview(a)
+        parent.addSubview(b)
+
+        constrain(a, b) { a, b in
+            let superview = a.superview
+            a.trailing.equalTo(superview.trailing, constant: 8)
+            a.top.equalTo(superview.top)
+            a.bottom.equalTo(superview.bottom)
+            b.top.equalTo(superview.top)
+            b.bottom.equalTo(superview.bottom)
+
+            align(trailing: a, b)
+        }
+
+        XCTAssertEqual(a.frame, .zero)
+        XCTAssertEqual(b.frame, .zero)
+
+        parent.layoutIfNeeded()
+        XCTAssertEqual(parent.frame, frame)
+        XCTAssertEqual(a.frame.origin.x, b.frame.origin.x)
+        XCTAssertEqual(b.frame.origin.x, frame.width + 8)
+    }
 }
