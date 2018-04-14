@@ -109,7 +109,7 @@ class ConstraintTests: XCTestCase {
             a.bottom.equalTo(superview.bottom)
             a.width.equalTo(100)
 
-            stack(horizontal: a, 10, b)
+            chain(horizontal: a, 10, b)
             a.leading.equalTo(superview.leading)
             b.trailing.equalTo(superview.trailing)
         }

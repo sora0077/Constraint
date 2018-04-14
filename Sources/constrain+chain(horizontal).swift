@@ -1,5 +1,5 @@
 //
-//  constrain+stack(horizontal).swift
+//  constrain+chain(horizontal).swift
 //  Constraint
 //
 //  Created by 林達也 on 2018/04/13.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport
     >(horizontal
@@ -19,7 +19,7 @@ public func stack<
     a2.leading.equalTo(a1.trailing, constant: c1)
 }
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport,
     A3: _UILayoutAnchorHorizontalSupport
@@ -34,7 +34,7 @@ public func stack<
     a3.leading.equalTo(a2.trailing, constant: c2)
 }
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport,
     A3: _UILayoutAnchorHorizontalSupport,
@@ -53,7 +53,7 @@ public func stack<
     a4.leading.equalTo(a3.trailing, constant: c3)
 }
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport,
     A3: _UILayoutAnchorHorizontalSupport,
@@ -76,7 +76,7 @@ public func stack<
     a5.leading.equalTo(a4.trailing, constant: c4)
 }
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport,
     A3: _UILayoutAnchorHorizontalSupport,
@@ -103,7 +103,7 @@ public func stack<
     a6.leading.equalTo(a5.trailing, constant: c5)
 }
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport,
     A3: _UILayoutAnchorHorizontalSupport,
@@ -134,7 +134,7 @@ public func stack<
     a7.leading.equalTo(a6.trailing, constant: c6)
 }
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport,
     A3: _UILayoutAnchorHorizontalSupport,
@@ -169,7 +169,7 @@ public func stack<
     a8.leading.equalTo(a7.trailing, constant: c7)
 }
 
-public func stack<
+public func chain<
     A1: _UILayoutAnchorHorizontalSupport,
     A2: _UILayoutAnchorHorizontalSupport,
     A3: _UILayoutAnchorHorizontalSupport,
