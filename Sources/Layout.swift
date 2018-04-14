@@ -44,6 +44,95 @@ public final class Layout<Base> {
     }
 }
 
+public protocol _UILayoutAnchorHorizontalSupport {
+    var leadingAnchor: NSLayoutXAxisAnchor { get }
+    var trailingAnchor: NSLayoutXAxisAnchor { get }
+
+    var leftAnchor: NSLayoutXAxisAnchor { get }
+    var rightAnchor: NSLayoutXAxisAnchor { get }
+
+    var centerXAnchor: NSLayoutXAxisAnchor { get }
+}
+
+public protocol _UILayoutAnchorVerticalSupport {
+    var topAnchor: NSLayoutYAxisAnchor { get }
+    var bottomAnchor: NSLayoutYAxisAnchor { get }
+
+    var centerYAnchor: NSLayoutYAxisAnchor { get }
+}
+
+public protocol _UILayoutAnchorDimensionSupport {
+    var widthAnchor: NSLayoutDimension { get }
+    var heightAnchor: NSLayoutDimension { get }
+}
+
+extension UIView: _UILayoutAnchorHorizontalSupport, _UILayoutAnchorVerticalSupport, _UILayoutAnchorDimensionSupport {}
+extension UILayoutGuide: _UILayoutAnchorHorizontalSupport, _UILayoutAnchorVerticalSupport, _UILayoutAnchorDimensionSupport {}
+
+public extension Layout where Base: _UILayoutAnchorHorizontalSupport {
+    var left: XAnchor {
+        return cached(initial: .init(base.leftAnchor, into: installer))
+    }
+
+    var right: XAnchor {
+        return cached(initial: .init(base.rightAnchor, into: installer))
+    }
+
+    var leading: XAnchor {
+        return cached(initial: .init(base.leadingAnchor, into: installer))
+    }
+
+    var trailing: XAnchor {
+        return cached(initial: .init(base.trailingAnchor, into: installer))
+    }
+
+    var centerX: XAnchor {
+        return cached(initial: .init(base.centerXAnchor, into: installer))
+    }
+}
+
+public extension Layout where Base: _UILayoutAnchorVerticalSupport {
+    var top: YAnchor {
+        return cached(initial: .init(base.topAnchor, into: installer))
+    }
+
+    var bottom: YAnchor {
+        return cached(initial: .init(base.bottomAnchor, into: installer))
+    }
+
+    var centerY: YAnchor {
+        return cached(initial: .init(base.centerYAnchor, into: installer))
+    }
+}
+
+public extension Layout where Base: _UILayoutAnchorDimensionSupport {
+    var width: DAnchor {
+        return cached(initial: .init(base.widthAnchor, into: installer))
+    }
+
+    var height: DAnchor {
+        return cached(initial: .init(base.heightAnchor, into: installer))
+    }
+
+    var size: SizeAnchor {
+        return cached(initial: .init(width: width, height: height))
+    }
+}
+
+public extension Layout where Base: _UILayoutAnchorHorizontalSupport & _UILayoutAnchorVerticalSupport {
+    var center: XYAnchor {
+        return cached(initial: .init(x: centerX, y: centerY))
+    }
+
+    var edge: EdgeAnchor {
+        return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
+    }
+
+    var strictEdge: EdgeAnchor {
+        return cached(initial: .init(top: top, left: left, bottom: bottom, right: right))
+    }
+}
+
 //
 // MARK: - UIViewController
 public extension Layout where Base: UIViewController {
@@ -62,11 +151,14 @@ public extension Layout where Base: UIViewController {
     }
 
     @available(iOS, deprecated: 11.0, message: "Use view.safeArea directly")
-    var safeArea: SafeAreaLayoutGuideCompatible {
+    var safeArea: Layout<SafeAreaLayoutGuideCompatible> {
         if #available(iOS 11.0, *) {
-            return view.safeArea
+            return cached(initial: .init(base.view.safeAreaLayoutGuide, group: installer))
         } else {
-            return cached(initial: SafeAreaLayoutGuideUnderOS10(top: topLayoutGuide.bottom, bottom: bottomLayoutGuide.top, view: view))
+            var guide: SafeAreaLayoutGuideUnderOS10 {
+                return .init(top: base.topLayoutGuide, bottom: base.bottomLayoutGuide, view: base.view)
+            }
+            return cached(initial: .init(guide, group: installer))
         }
     }
 }
@@ -97,62 +189,6 @@ public extension Layout where Base: UIView {
 
     var lastBaseline: YAnchor {
         return cached(initial: .init(base.lastBaselineAnchor, into: installer))
-    }
-
-    var centerX: XAnchor {
-        return cached(initial: .init(base.centerXAnchor, into: installer))
-    }
-
-    var centerY: YAnchor {
-        return cached(initial: .init(base.centerYAnchor, into: installer))
-    }
-
-    var top: YAnchor {
-        return cached(initial: .init(base.topAnchor, into: installer))
-    }
-
-    var bottom: YAnchor {
-        return cached(initial: .init(base.bottomAnchor, into: installer))
-    }
-
-    var left: XAnchor {
-        return cached(initial: .init(base.leftAnchor, into: installer))
-    }
-
-    var right: XAnchor {
-        return cached(initial: .init(base.rightAnchor, into: installer))
-    }
-
-    var leading: XAnchor {
-        return cached(initial: .init(base.leadingAnchor, into: installer))
-    }
-
-    var trailing: XAnchor {
-        return cached(initial: .init(base.trailingAnchor, into: installer))
-    }
-
-    var width: DAnchor {
-        return cached(initial: .init(base.widthAnchor, into: installer))
-    }
-
-    var height: DAnchor {
-        return cached(initial: .init(base.heightAnchor, into: installer))
-    }
-
-    var center: XYAnchor {
-        return cached(initial: .init(x: centerX, y: centerY))
-    }
-
-    var size: SizeAnchor {
-        return cached(initial: .init(width: width, height: height))
-    }
-
-    var edge: EdgeAnchor {
-        return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
-    }
-
-    var strictEdge: EdgeAnchor {
-        return cached(initial: .init(top: top, left: left, bottom: bottom, right: right))
     }
 
     @discardableResult
@@ -195,66 +231,6 @@ public extension Layout where Base: UIScrollView {
     @available(iOS 11.0, *)
     var frameLayoutGuide: Layout<UILayoutGuide> {
         return cached(initial: .init(base.frameLayoutGuide, group: installer))
-    }
-}
-
-//
-// MARK: - UILayoutGuide
-public extension Layout where Base: UILayoutGuide {
-    var centerX: XAnchor {
-        return cached(initial: .init(base.centerXAnchor, into: installer))
-    }
-
-    var centerY: YAnchor {
-        return cached(initial: .init(base.centerYAnchor, into: installer))
-    }
-
-    var top: YAnchor {
-        return cached(initial: .init(base.topAnchor, into: installer))
-    }
-
-    var bottom: YAnchor {
-        return cached(initial: .init(base.bottomAnchor, into: installer))
-    }
-
-    var left: XAnchor {
-        return cached(initial: .init(base.leftAnchor, into: installer))
-    }
-
-    var right: XAnchor {
-        return cached(initial: .init(base.rightAnchor, into: installer))
-    }
-
-    var leading: XAnchor {
-        return cached(initial: .init(base.leadingAnchor, into: installer))
-    }
-
-    var trailing: XAnchor {
-        return cached(initial: .init(base.trailingAnchor, into: installer))
-    }
-
-    var width: DAnchor {
-        return cached(initial: .init(base.widthAnchor, into: installer))
-    }
-
-    var height: DAnchor {
-        return cached(initial: .init(base.heightAnchor, into: installer))
-    }
-
-    var center: XYAnchor {
-        return cached(initial: .init(x: centerX, y: centerY))
-    }
-
-    var size: SizeAnchor {
-        return cached(initial: .init(width: width, height: height))
-    }
-
-    var edge: EdgeAnchor {
-        return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
-    }
-
-    var strictEdge: EdgeAnchor {
-        return cached(initial: .init(top: top, left: left, bottom: bottom, right: right))
     }
 }
 

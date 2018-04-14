@@ -8,52 +8,33 @@
 
 import Foundation
 
-public protocol SafeAreaLayoutGuideCompatible {
-    var centerX: XAnchor { get }
-    var centerY: YAnchor { get }
-    var top: YAnchor { get }
-    var bottom: YAnchor { get }
-    var left: XAnchor { get }
-    var right: XAnchor { get }
-    var leading: XAnchor { get }
-    var trailing: XAnchor { get }
-    var width: DAnchor { get }
-    var height: DAnchor { get }
-    var center: XYAnchor { get }
-    var size: SizeAnchor { get }
-    var edge: EdgeAnchor { get }
-    var strictEdge: EdgeAnchor { get }
-}
+public protocol SafeAreaLayoutGuideCompatible: _UILayoutAnchorHorizontalSupport, _UILayoutAnchorVerticalSupport, _UILayoutAnchorDimensionSupport {}
 
-extension Layout: SafeAreaLayoutGuideCompatible where Base == UILayoutGuide {}
+extension UILayoutGuide: SafeAreaLayoutGuideCompatible {}
 
-struct SafeAreaLayoutGuideUnderOS10: SafeAreaLayoutGuideCompatible {
-    let top: YAnchor
-    let bottom: YAnchor
-    let view: Layout<UIView>
-
-    init(top: YAnchor, bottom: YAnchor, view: Layout<UIView>) {
-        (self.top, self.bottom, self.view) = (top, bottom, view)
-    }
-}
-
-extension SafeAreaLayoutGuideUnderOS10 {
-    var centerX: XAnchor { return view.centerX }
-    var centerY: YAnchor { return view.centerY }
-    var left: XAnchor { return view.left }
-    var right: XAnchor { return view.right }
-    var leading: XAnchor { return view.leading }
-    var trailing: XAnchor { return view.trailing }
-    var width: DAnchor { return view.width }
-    var height: DAnchor {
+final class SafeAreaLayoutGuideUnderOS10: SafeAreaLayoutGuideCompatible {
+    var leadingAnchor: NSLayoutXAxisAnchor { return view.leadingAnchor }
+    var trailingAnchor: NSLayoutXAxisAnchor { return view.trailingAnchor }
+    var leftAnchor: NSLayoutXAxisAnchor { return view.leftAnchor }
+    var rightAnchor: NSLayoutXAxisAnchor { return view.rightAnchor }
+    var centerXAnchor: NSLayoutXAxisAnchor { return view.centerXAnchor }
+    var topAnchor: NSLayoutYAxisAnchor { return top.bottomAnchor }
+    var bottomAnchor: NSLayoutYAxisAnchor { return bottom.topAnchor }
+    var centerYAnchor: NSLayoutYAxisAnchor { return view.centerYAnchor }
+    var widthAnchor: NSLayoutDimension { return view.widthAnchor }
+    var heightAnchor: NSLayoutDimension {
         if #available(iOS 10.0, *) {
-            return top.anchorWithOffset(bottom)
+            return topAnchor.anchorWithOffset(to: bottomAnchor)
         } else {
-            return view.height
+            return view.heightAnchor
         }
     }
-    var center: XYAnchor { return view.center }
-    var size: SizeAnchor { return SizeAnchor(width: width, height: height) }
-    var edge: EdgeAnchor { return .init(top: top, left: view.leading, bottom: bottom, right: view.trailing) }
-    var strictEdge: EdgeAnchor { return .init(top: top, left: left, bottom: bottom, right: right) }
+
+    private let top: UILayoutSupport
+    private let bottom: UILayoutSupport
+    private let view: UIView
+
+    init(top: UILayoutSupport, bottom: UILayoutSupport, view: UIView) {
+        (self.top, self.bottom, self.view) = (top, bottom, view)
+    }
 }
