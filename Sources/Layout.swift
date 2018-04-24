@@ -133,6 +133,68 @@ public extension Layout where Base: _UILayoutAnchorHorizontalSupport & _UILayout
     }
 }
 
+public extension Layout where Base == SafeAreaLayoutGuideCompatible {
+    // MARK: horizontal
+    var left: XAnchor {
+        return cached(initial: .init(base.leftAnchor, into: installer))
+    }
+
+    var right: XAnchor {
+        return cached(initial: .init(base.rightAnchor, into: installer))
+    }
+
+    var leading: XAnchor {
+        return cached(initial: .init(base.leadingAnchor, into: installer))
+    }
+
+    var trailing: XAnchor {
+        return cached(initial: .init(base.trailingAnchor, into: installer))
+    }
+
+    var centerX: XAnchor {
+        return cached(initial: .init(base.centerXAnchor, into: installer))
+    }
+
+    // MARK: vertical
+    var top: YAnchor {
+        return cached(initial: .init(base.topAnchor, into: installer))
+    }
+
+    var bottom: YAnchor {
+        return cached(initial: .init(base.bottomAnchor, into: installer))
+    }
+
+    var centerY: YAnchor {
+        return cached(initial: .init(base.centerYAnchor, into: installer))
+    }
+
+    // MARK: dimension
+    var width: DAnchor {
+        return cached(initial: .init(base.widthAnchor, into: installer))
+    }
+
+    var height: DAnchor {
+        return cached(initial: .init(base.heightAnchor, into: installer))
+    }
+
+    var size: SizeAnchor {
+        return cached(initial: .init(width: width, height: height))
+    }
+
+    // MARK: horizontal & vertical
+    var center: XYAnchor {
+        return cached(initial: .init(x: centerX, y: centerY))
+    }
+
+    var edge: EdgeAnchor {
+        return cached(initial: .init(top: top, left: leading, bottom: bottom, right: trailing))
+    }
+
+    var strictEdge: EdgeAnchor {
+        return cached(initial: .init(top: top, left: left, bottom: bottom, right: right))
+    }
+}
+
 //
 // MARK: - UIViewController
 public extension Layout where Base: UIViewController {
