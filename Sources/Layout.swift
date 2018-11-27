@@ -275,11 +275,11 @@ public extension Layout where Base: UIView {
         return height
     }
 
-    func contentHuggingPriority(for axis: UILayoutConstraintAxis) -> UILayoutPriority {
+    func contentHuggingPriority(for axis: NSLayoutConstraint.Axis) -> UILayoutPriority {
         return base.contentHuggingPriority(for: axis)
     }
 
-    func contentCompressionResistancePriority(for axis: UILayoutConstraintAxis) -> UILayoutPriority {
+    func contentCompressionResistancePriority(for axis: NSLayoutConstraint.Axis) -> UILayoutPriority {
         return base.contentCompressionResistancePriority(for: axis)
     }
 }

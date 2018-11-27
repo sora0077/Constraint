@@ -71,7 +71,7 @@ extension YAnchor {
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         return group.install(
-            anchor.constraintEqualToSystemSpacingBelow(rhs.anchor, multiplier: multiplier),
+            anchor.constraint(equalToSystemSpacingBelow: rhs.anchor, multiplier: multiplier),
             priority: priority, file, line)
     }
 
@@ -84,7 +84,7 @@ extension YAnchor {
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         return group.install(
-            anchor.constraintGreaterThanOrEqualToSystemSpacingBelow(rhs.anchor, multiplier: multiplier),
+            anchor.constraint(greaterThanOrEqualToSystemSpacingBelow: rhs.anchor, multiplier: multiplier),
             priority: priority, file, line)
     }
 
@@ -97,7 +97,7 @@ extension YAnchor {
         _ file: StaticString = #file, _ line: UInt = #line
         ) -> NSLayoutConstraint {
         return group.install(
-            anchor.constraintLessThanOrEqualToSystemSpacingBelow(rhs.anchor, multiplier: multiplier),
+            anchor.constraint(lessThanOrEqualToSystemSpacingBelow: rhs.anchor, multiplier: multiplier),
             priority: priority, file, line)
     }
 }
